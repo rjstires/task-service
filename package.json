@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node_modules/.bin/mocha -r ts-node/register src/**/*.spec.ts",
     "dev:watch": "node_modules/.bin/nodemon compiled/index.js",
     "precompile": "node_modules/.bin/rimraf compiled/",
     "compile": "node_modules/.bin/tsc"
@@ -20,14 +20,19 @@
     "ramda": "0.23.0"
   },
   "devDependencies": {
+    "@types/chai": "3.4.35",
     "@types/debug": "0.0.29",
     "@types/dotenv": "2.0.20",
     "@types/hapi": "16.0.0",
+    "@types/mocha": "2.2.40",
     "@types/node": "7.0.12",
     "@types/ramda": "0.0.5",
+    "chai": "3.5.0",
     "eslint": "3.18.0",
+    "mocha": "3.2.0",
     "nodemon": "1.11.0",
     "rimraf": "2.6.1",
+    "ts-node": "3.0.2",
     "typescript": "2.2.2"
   }
 }
