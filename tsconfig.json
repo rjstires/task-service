@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es6",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "moduleResolution": "node",
+    "outDir": "compiled/",
+    "alwaysStrict": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

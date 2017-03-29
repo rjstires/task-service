@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:watch": "node_modules/.bin/nodemon index.js"
+    "dev:watch": "node_modules/.bin/nodemon compiled/index.js",
+    "precompile": "node_modules/.bin/rimraf compiled/",
+    "compile": "node_modules/.bin/tsc"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +20,14 @@
     "ramda": "0.23.0"
   },
   "devDependencies": {
+    "@types/debug": "0.0.29",
+    "@types/dotenv": "2.0.20",
+    "@types/hapi": "16.0.0",
+    "@types/node": "7.0.12",
+    "@types/ramda": "0.0.5",
     "eslint": "3.18.0",
-    "nodemon": "1.11.0"
+    "nodemon": "1.11.0",
+    "rimraf": "2.6.1",
+    "typescript": "2.2.2"
   }
 }
