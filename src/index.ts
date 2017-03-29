@@ -1,22 +1,20 @@
-const {port, host} = require('./config');
-const Hapi = require('hapi');
-const debug = require('./debug');
+import * as Hapi from 'hapi'
+import * as debug from './debug';
+import { env, port, host } from './config';
+import { rootRoute } from './routes';
 
 const server = new Hapi.Server();
 
-server.connection({
-  port,
-  host,
-});
+server.connection({port, host});
 
-server.start((err) => {
+server.start((err: any) => {
   if (err) {
     throw err;
   }
 
-  debug(`Server running at ${server.info.uri}`);
+  debug.server(`Server running at ${server.info.uri}`);
 });
 
-require('./routes')(server);
+rootRoute(server);
 
 module.exports = server;

@@ -1,7 +1,7 @@
-const debug = require('./debug');
-const hapi = require('hapi');
+import {server as debug} from './debug';
+import * as hapi from 'hapi';
 
-const routes = function(server: hapi.Server) {
+export const rootRoute = function(server: hapi.Server) {
   server.route({
     method: 'GET',
     path: '/',
@@ -11,5 +11,3 @@ const routes = function(server: hapi.Server) {
     },
   });
 };
-
-module.exports = routes;

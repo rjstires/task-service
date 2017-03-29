@@ -1,56 +1,48 @@
-const dotenv = require('dotenv');
-const R = require('ramda')
+import * as dotenv from 'dotenv';
+import * as R from 'ramda';
 
 interface IConfigObject {
+  env: string,
   port: number,
   host: string
 }
 
-interface IConfigGenerator {
-  (obj: IConfigObject): IConfigObject
-}
-
 dotenv.config();
 
-let envSupported: (env: string) => boolean;
-envSupported = (env) => {
-  return R.contains(env, ['LOCAL', 'TESTING', 'STAGING', 'PRODUCTION'])
-};
-
+// Helper, extract.
 const inlineLog = R.tap(console.log);
 
-let getNodeEnvOrDefault: (process: NodeJS.Process) => string;
-getNodeEnvOrDefault = R.compose(
-  R.unless(envSupported, R.always('LOCAL')),
+export let environmentSupported: (env: string) => boolean;
+environmentSupported = (env) => R.contains(env, ['LOCAL', 'TESTING', 'STAGING', 'PRODUCTION']);
+
+export let getEnvironmentOrDefault: (process: NodeJS.Process) => string;
+getEnvironmentOrDefault = R.compose(
+  R.unless(environmentSupported, R.always('LOCAL')),
   R.when(R.empty, R.always('LOCAL')),
   R.path(['env', 'NODE_ENV'])
 );
 
-let createDefaultConfigObject: (env: string) => IConfigObject;
-createDefaultConfigObject = (env) => {
-  return { env: env, port: 3000, host: 'localhost', other: 'Some other value which shant be changed!' }
-}
+export let createDefaultConfigObject: (env: string) => IConfigObject;
+createDefaultConfigObject = (env) => Object.assign({}, {
+  env,
+  port: 3000,
+  host: 'localhost'
+});
 
-let configObject: (env: string, config: IConfigObject) => IConfigObject;
-configObject = (env: string, config: IConfigObject) => R.when(
+export let updateConfigObjectForEnvironment: (env: string, config: IConfigObject) => (config: IConfigObject) => IConfigObject;
+updateConfigObjectForEnvironment = (env, config) => R.when(
   R.propEq('env', env),
-  R.mapObjIndexed((v: any, k: string) => R.defaultTo(v, R.prop(k, config))) // This is an overly complicated Object.assign()....
+  (obj) => R.merge(obj, config)
 );
 
-
-let whenProduction: IConfigObject = configObject('PRODUCTION', { port: 3003, host: 'localhost' });
-let whenStaging: IConfigObject = configObject('STAGING', { port: 3002, host: 'localhost' });
-let whenTesting: IConfigObject = configObject('TESTING', { port: 3001, host: 'localhost' });
-
-
-let setConfigValues: (process: NodeJS.Process) => IConfigObject;
+export let setConfigValues: (process: NodeJS.Process) => IConfigObject;
 setConfigValues = R.compose(
   inlineLog,
-  whenTesting,
-  whenStaging,
-  whenProduction,
+  updateConfigObjectForEnvironment('TESTING', {env: 'TESTING', port: 3001, host: 'testing.localhost' }),
+  updateConfigObjectForEnvironment('STAGING', { env: 'STAGING', port: 3002, host: 'staging.localhost' }),
+  updateConfigObjectForEnvironment('PRODUCTION', { env: 'PRODUCTION', port: 3003, host: 'prod.localhost' }),
   createDefaultConfigObject,
-  getNodeEnvOrDefault
+  getEnvironmentOrDefault
 );
 
-module.exports = setConfigValues(process);
+export const {env, port, host } = setConfigValues(process);

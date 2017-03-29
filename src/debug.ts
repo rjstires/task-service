@@ -1,1 +1,4 @@
-module.exports = require('debug')('server');
+import * as debug from 'debug';
+
+export const server = debug('server');
+
