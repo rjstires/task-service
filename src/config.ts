@@ -37,7 +37,6 @@ updateConfigObjectForEnvironment = (env, config) => R.when(
 
 export let setConfigValues: (process: NodeJS.Process) => IConfigObject;
 setConfigValues = R.compose(
-  inlineLog,
   updateConfigObjectForEnvironment('TESTING', {env: 'TESTING', port: 3001, host: 'testing.localhost' }),
   updateConfigObjectForEnvironment('STAGING', { env: 'STAGING', port: 3002, host: 'staging.localhost' }),
   updateConfigObjectForEnvironment('PRODUCTION', { env: 'PRODUCTION', port: 3003, host: 'prod.localhost' }),
